@@ -4,6 +4,7 @@
 import threading
 import time
 import sys
+import os
 
 class TimeThread(threading.Thread):
     def __init__(self, thread_id, name, remain_time):
@@ -14,13 +15,21 @@ class TimeThread(threading.Thread):
         self.total_time = remain_time
 
     def run(self):
-        print('开始倒计时')
+
+        terminal_notifier("倒计时开始", "剩余时间" + (time_format(self.remain_time)))
+
         while self.remain_time > 0:
             self.remain_time -= 1
             progress_log(time_format(self.remain_time), self.remain_time, self.total_time)
             time.sleep(1)
 
-        print('\n倒计时结束')
+        terminal_notifier("倒计时结束", "请选择下一项任务")
+
+def terminal_notifier(title, content, sound=True):
+    if sound:
+        os.system('terminal-notifier -message %s -title %s -sound default' % (content, title))
+    else:
+        os.system('terminal-notifier -message %s -title %s' % (content, title))
 
 
 LOG_WIDTH = 35
@@ -59,13 +68,13 @@ def main():
     while True:
         input_s = print_category()
         if input_s == '1':
-            thread = TimeThread(1, 'time_thread', 15)
+            thread = TimeThread(1, 'time_thread', 1500)
             thread.start()
         elif input_s == '2':
-            thread = TimeThread(1, 'time_thread', 3)
+            thread = TimeThread(1, 'time_thread', 300)
             thread.start()
         elif input_s == '3':
-            thread = TimeThread(1, 'time_thread', 6)
+            thread = TimeThread(1, 'time_thread', 600)
             thread.start()
         else:
             return
