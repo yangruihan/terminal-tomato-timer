@@ -30,7 +30,7 @@ class TimeThread(threading.Thread):
                          self.remain_time, self.total_time)
             time.sleep(1)
 
-        with open('log.txt', 'w') as f:
+        with open('log.txt', 'w+') as f:
             lines = f.readlines()
             if len(lines) > 0:
                 if lines[-1].split(' ')[0] == time.strftime('%Y-%m-%d_%H:%M:%S', time.time):
