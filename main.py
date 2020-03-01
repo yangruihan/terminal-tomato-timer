@@ -30,7 +30,7 @@ class TimeThread(threading.Thread):
                          self.remain_time, self.total_time)
             time.sleep(1)
 
-        with open('log.txt', 'w+') as f:
+        with open('log.txt', 'r+') as f:
             lines = f.readlines()
             if len(lines) > 0:
                 if lines[-1].split(' ')[0] == time.strftime('%Y-%m-%d_%H:%M:%S', time.time):
@@ -78,6 +78,9 @@ def print_category():
         print("输入有误，请重新输入")
         print("> ", end='')
         input_s = input()
+
+    if input_s == '4':
+        return input_s, ''
 
     print("请输入目标（可为空）")
     print("> ", end='')
