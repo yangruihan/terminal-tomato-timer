@@ -20,7 +20,7 @@ class TimeThread(threading.Thread):
     def run(self):
         with open('log.txt', 'a') as f:
             f.write(
-                f"{time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(self.start_time))} {self.target} $X$")
+                f"{time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(self.start_time))} {self.target} $X$\n")
 
         terminal_notifier("倒计时开始", "剩余时间" + (time_format(self.remain_time)))
 
@@ -30,12 +30,19 @@ class TimeThread(threading.Thread):
                          self.remain_time, self.total_time)
             time.sleep(1)
 
-        with open('log.txt', 'r+') as f:
+        lines = []
+
+        with open('log.txt', 'r') as f:
             lines = f.readlines()
+
+            while '' in lines:
+                lines.remove('')
+
+        with open('log.txt', 'w') as f:
             if len(lines) > 0:
-                if lines[-1].split(' ')[0] == time.strftime('%Y-%m-%d_%H:%M:%S', time.time):
-                    lines[-1] = f"{time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(self.start_time))} {self.target} $D$"
-                    f.writelines(lines)
+                if lines[-1].split(' ')[0] == time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(self.start_time)):
+                    lines[-1] = f"{time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(self.start_time))} {self.target} $D$\n"
+            f.writelines(lines)
 
         terminal_notifier("倒计时结束", "请选择下一项任务")
 
@@ -79,7 +86,9 @@ def print_category():
         print("> ", end='')
         input_s = input()
 
-    if input_s == '4':
+    if input_s in '23':
+        return input_s, '休息'
+    elif input_s == '4':
         return input_s, ''
 
     print("请输入目标（可为空）")
